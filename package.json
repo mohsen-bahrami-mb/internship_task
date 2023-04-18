@@ -1,0 +1,32 @@
+{
+  "name": "internship_task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env PORT=\"5000\" internship_task_db=\"mongodb://127.0.0.1:27017/internship_task\" internship_task_jwt=\"kd;l339jka,+47lsml;qdmk\" DEBUG=\"app:main\" NODE_ENV=\"production\" node index.js",
+    "start-dev": "cross-env PORT=\"5000\" internship_task_db=\"mongodb://127.0.0.1:27017/internship_task\" internship_task_jwt=\"kd;l339jka,+47lsml;qdmk\" DEBUG=\"app:main\" NODE_ENV=\"development\" nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^5.1.0",
+    "config": "^3.3.9",
+    "cors": "^2.8.5",
+    "debug": "^4.3.4",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^7.0.1",
+    "helmet": "^6.1.5",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.4",
+    "mongoose-timestamp": "^0.6.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "db":{
+        "address": "internship_task_db"
+    },
+    "jwt" :{
+        "key": "internship_task_jwt"
+    }
+}
