@@ -3,6 +3,6 @@ const router = express.Router();
 const controller = require('./controller');
 const validator = require('./validator');
 
-router.post("/", controller.login,(res,req)=>{console.log('b')});
+router.post("/login", controller.login);
 
 module.exports = router;
