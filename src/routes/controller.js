@@ -1,5 +1,6 @@
 const autoBind = require('auto-bind');
 const { validationResult } = require('express-validator');
+const User = require('../models/user');
 
 module.exports = class {
     constructor() {
@@ -10,6 +11,7 @@ module.exports = class {
          * needs to use this "Class" to run these functions or any functions in childerns.
         */
         autoBind(this);
+        this.User = User;
     }
 
     validationBody(req, res) {

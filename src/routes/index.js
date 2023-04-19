@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
 // require routes
-const loginRouter = require('./loginRouter');
-const adminRouter = require('./adminRouter');
-const userRouter = require('./userRouter');
-const notFoundRouter = require('./notFoundRouter');
+const loginRouter = require('./auth');
+const adminRouter = require('./admin');
+const userRouter = require('./user');
+const notFoundRouter = require('./notFound');
 // require middlewares
 const error = require('../middlewares/error');
 
 // call routers
-//  >> /api/login
-router.use("/api/login", loginRouter);
+//  >> /api/auth/login
+router.use("/api/auth", loginRouter);
 //  >> /api/admin/users
 router.use("/api/admin", adminRouter);
 //  >> /api/user
