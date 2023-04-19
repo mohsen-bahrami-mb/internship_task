@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 // require routes
 const loginRouter = require('./auth');
-const adminRouter = require('./admin');
-const userRouter = require('./user');
-const notFoundRouter = require('./notFound');
+// const adminRouter = require('./admin');
+// const userRouter = require('./user');
+// const notFoundRouter = require('./notFound');
 // require middlewares
 const error = require('../middlewares/error');
 
@@ -12,13 +12,13 @@ const error = require('../middlewares/error');
 //  >> /api/auth/login
 router.use("/api/auth", loginRouter);
 //  >> /api/admin/users
-router.use("/api/admin", adminRouter);
+// router.use("/api/admin", adminRouter);
 //  >> /api/user
 //  >> /api/user/task?select-task=taskID
 //  >> /api/user/add-task-partners?select-task=taskID
-router.use("/api/user", userRouter);
+// router.use("/api/user", userRouter);
 //  >> /not-found
-router.use("/not-found", notFoundRouter);
+// router.use("/not-found", notFoundRouter);
 
 // handle errors
 router.use(error);
