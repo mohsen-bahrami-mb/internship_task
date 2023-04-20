@@ -3,6 +3,9 @@ const { validationResult } = require('express-validator');
 const User = require('../models/user');
 const Task = require('../models/task');
 
+// Abstraction methods & properties
+const _validationBody = Symbol();
+
 module.exports = class {
     constructor() {
         /**
@@ -17,7 +20,7 @@ module.exports = class {
         this.Task = Task;
     }
 
-    validationBody(req, res) {
+    [_validationBody](req, res) {
         // return errors as response
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -33,7 +36,7 @@ module.exports = class {
 
     validate(req, res, next) {
         // middleware to decide send errors or continue proc
-        if (!this.validationBody(req, res)) return;
+        if (!this[_validationBody](req, res)) return;
         next();
     }
 
