@@ -7,12 +7,13 @@ const adminRouter = require('./admin');
 // const notFoundRouter = require('./notFound');
 // require middlewares
 const { errorApp } = require('../middlewares/error');
+const { isLogin, isAdmin } = require('../middlewares/auth');
 
 // call routers
 //  >> /api/auth/login
 router.use("/api/auth", loginRouter);
 //  >> /api/admin/users
-router.use("/api/admin", adminRouter);
+router.use("/api/admin", isLogin, adminRouter);
 //  >> /api/user
 //  >> /api/user/task?select-task=taskID
 //  >> /api/user/add-task-partners?select-task=taskID
