@@ -21,5 +21,10 @@ async function isLogin(req, res, next) {
     next();
 }
 
+async function isAdmin(req, res, next) {
+    const isAdmin = await req.user.is_admin;
+    if (!isAdmin) return res.status(403).json({ message: "access denied - no admin", data: {} });
+    next();
+}
 
-module.exports = { isLogin };
+module.exports = { isLogin, isAdmin };

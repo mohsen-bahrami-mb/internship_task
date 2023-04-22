@@ -13,7 +13,7 @@ const { isLogin, isAdmin } = require('../middlewares/auth');
 //  >> /api/auth/login
 router.use("/api/auth", loginRouter);
 //  >> /api/admin/users
-router.use("/api/admin", isLogin, adminRouter);
+router.use("/api/admin", isLogin, isAdmin, adminRouter);
 //  >> /api/user
 //  >> /api/user/task?select-task=taskID
 //  >> /api/user/add-task-partners?select-task=taskID
