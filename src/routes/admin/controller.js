@@ -73,7 +73,7 @@ module.exports = new (class extends Controller {
         });
         await editUser.save();
         // send response
-        this.response({ res, message: "change user details", sCode: 200, data: editUser });
+        this.response({ res, message: "change user details", sCode: 201, data: editUser });
     }
 
     async removeUaer(req, res) {

@@ -41,7 +41,7 @@ module.exports = new (class extends Controller {
         // save task on user tasks
         req.user.tasks.push(task._id);
         // ".save()" method called in previous for user. it called in "setLoginExpireAt"
-        this.response({ res, sCode: 200, message: "successfully added new task", data: task });
+        this.response({ res, sCode: 201, message: "successfully added new task", data: task });
     }
 
     async editTask(req, res) {
@@ -68,7 +68,7 @@ module.exports = new (class extends Controller {
         });
         await task.save();
         // send response
-        this.response({ res, message: "change task detail", sCode: 200, data: task });
+        this.response({ res, message: "change task detail", sCode: 201, data: task });
     }
 
     async removeTask(req, res) {
