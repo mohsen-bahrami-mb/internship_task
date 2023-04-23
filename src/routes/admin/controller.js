@@ -53,7 +53,7 @@ module.exports = new (class extends Controller {
         await Promise.all(await new_tasks.map(async (tId) => {
             const isOldTask = oldTasksUser.find(t => t._id == tId);
             if (isOldTask) return newTasksUser.push(tId);
-            try { 
+            try {
                 const isExistTask = await this.Task.findById(tId);
                 if (isExistTask) return newTasksUser.push(tId);
             } catch {
@@ -74,6 +74,16 @@ module.exports = new (class extends Controller {
         await editUser.save();
         // send response
         this.response({ res, message: "change user details", sCode: 200, data: editUser });
+    }
+
+    async removeUaer(req, res) {
+        // find user email on database
+        const email = req.params.email;
+        const removeUser = await this.User.findOneAndRemove({ email });
+        if (!removeUser) return this.response({ res, sCode: 404, message: `cannot find this user (${email})` });
+        this.response({
+            res, sCode: 200, message: "user is deleted", data: { email: removeUser.email, name: removeUser.name }
+        });
     }
 
 })();

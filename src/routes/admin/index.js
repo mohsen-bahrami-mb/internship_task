@@ -14,5 +14,6 @@ router.put("/users/:email",
     controller.validate,
     controller.editUser
 );
+router.delete("/users/:email", controller.removeUaer);
 
 module.exports = router;
