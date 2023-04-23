@@ -3,6 +3,7 @@ const router = express.Router();
 const controller = require('./controller');
 const validator = require('./validator');
 
+router.get("/all-tasks", controller.getAllTasks);
 router.get("/task", controller.getTask);
 router.post("/task",
     validator.taskValidator(),

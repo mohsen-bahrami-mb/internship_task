@@ -3,6 +3,12 @@ const { taskPriorityEnum } = require('../../models/task')
 
 module.exports = new (class extends Controller {
 
+    async getAllTasks(req, res) {
+        const allUserTasksId = req.user.tasks;
+        const allUserTasks = await this.Task.find({ _id: { $in: allUserTasksId } });
+        this.response({ res, sCode: 200, message: 'get a task', data: allUserTasks });
+    }
+
     async getTask(req, res) {
         // get task id of query >> ?select-task=
         const taskId = req.query["select-task"];
