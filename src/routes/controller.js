@@ -1,7 +1,7 @@
 const autoBind = require('auto-bind');
 const { validationResult } = require('express-validator');
 const User = require('../models/user');
-const Task = require('../models/task');
+const { Task } = require('../models/task');
 
 // Abstraction methods & properties
 const _validationBody = Symbol();
