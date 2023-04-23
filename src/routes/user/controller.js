@@ -14,7 +14,11 @@ module.exports = new (class extends Controller {
         const taskId = req.query["select-task"];
         let task;
         try { task = await this.Task.findById(taskId); } catch { }
-        if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
+        if (!task) return this.response({ res, sCode: 404, message: "cannot find task id in query(select-task=)" });
+        // check user is partner in this task
+        const isUserTask = req.user.tasks.find(t => t._id == taskId);
+        if (!isUserTask) return this.response({ res, sCode: 401, message: "access denied - your not partner in this task" });
+        // send response
         this.response({ res, sCode: 200, message: 'get a task', data: task });
     }
 
@@ -46,6 +50,9 @@ module.exports = new (class extends Controller {
         let task;
         try { task = await this.Task.findById(taskId); } catch { }
         if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
+        // check user is partner in this task
+        const isUserTask = req.user.tasks.find(t => t._id == taskId);
+        if (!isUserTask) return this.response({ res, sCode: 401, message: "access denied - your not partner in this task" });
         // validation task body
         let { name, priority, images_urls, description } = req.body;
         if (!taskPriorityEnum.includes(priority))
@@ -67,6 +74,9 @@ module.exports = new (class extends Controller {
     async removeTask(req, res) {
         // get task id of query >> ?select-task=
         const taskId = req.query["select-task"];
+        // check user is partner in this task
+        const isUserTask = req.user.tasks.find(t => t._id == taskId);
+        if (!isUserTask) return this.response({ res, sCode: 401, message: "access denied - your not partner in this task" });
         let task;
         try {
             // delete task of database
