@@ -9,7 +9,11 @@ router.post("/task",
     controller.validate,
     controller.createTask
 );
-// router.put("/task", controller.editTask);
+router.put("/task",
+    validator.taskValidator(),
+    controller.validate,
+    controller.editTask
+);
 // router.post("/task", controller.removeTask);
 
 module.exports = router;

@@ -39,7 +39,7 @@ module.exports = new (class extends Controller {
         if (!editUser) return this.response({ res, sCode: 404, message: "not found user email in parameter" });
         // get detail of body
         let { new_email, new_name, new_password, new_is_admin, new_image_url, new_tasks } = req.body;
-        // check, email has existed on database
+        // check, "new_email" has existed on database
         const existedUser = await this.User.findOne({ email: new_email });
         if (existedUser && email != existedUser.email)
             return this.response({ res, sCode: 400, message: "this user has already been" });
@@ -48,14 +48,14 @@ module.exports = new (class extends Controller {
         new_password = await bcrypt.hash(new_password, salt);
         // check tasks id is currect. then add to new tasks.
         let failedSendTask = [];
-        let newTasksUser = [];
-        let oldTasksUser = [...editUser.tasks];
+        let userNewTasks = [];
+        let userOldTasks = [...editUser.tasks];
         await Promise.all(await new_tasks.map(async (tId) => {
-            const isOldTask = oldTasksUser.find(t => t._id == tId);
-            if (isOldTask) return newTasksUser.push(tId);
+            const isOldTask = userOldTasks.find(t => t._id == tId);
+            if (isOldTask) return userNewTasks.push(tId);
             try {
                 const isExistTask = await this.Task.findById(tId);
-                if (isExistTask) return newTasksUser.push(tId);
+                if (isExistTask) return userNewTasks.push(tId);
             } catch {
                 failedSendTask.push(`cannot find task id: ${tId}`);
             }
@@ -69,7 +69,7 @@ module.exports = new (class extends Controller {
             password: new_password,
             is_admin: new_is_admin,
             image_url: new_image_url,
-            tasks: newTasksUser
+            tasks: userNewTasks
         });
         await editUser.save();
         // send response

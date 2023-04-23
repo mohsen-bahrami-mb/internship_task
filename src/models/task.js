@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
     name: { type: String, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, required: true },
     priority: { type: String, enum: taskPriorityEnum, required: true },
-    images_url: [String],
+    images_urls: [String],
     description: String
 });
 
