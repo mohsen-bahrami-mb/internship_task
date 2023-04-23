@@ -14,6 +14,6 @@ router.put("/task",
     controller.validate,
     controller.editTask
 );
-// router.post("/task", controller.removeTask);
+router.delete("/task", controller.removeTask);
 
 module.exports = router;

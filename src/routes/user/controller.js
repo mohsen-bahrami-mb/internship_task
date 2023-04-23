@@ -8,7 +8,7 @@ module.exports = new (class extends Controller {
         const taskId = req.query["select-task"];
         let task;
         try { task = await this.Task.findById(taskId); } catch { }
-        if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query' });
+        if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
         this.response({ res, sCode: 200, message: 'get a task', data: task });
     }
 
@@ -31,15 +31,15 @@ module.exports = new (class extends Controller {
         // save task on user tasks
         req.user.tasks.push(task._id);
         // ".save()" method called in previous for user. it called in "setLoginExpireAt"
-        this.response({ res, sCode: 200, message: "successfully added new task", data: { task } });
+        this.response({ res, sCode: 200, message: "successfully added new task", data: task });
     }
 
     async editTask(req, res) {
         // get task id of query >> ?select-task=
         const taskId = req.query["select-task"];
-        let editTask;
-        try { editTask = await this.Task.findById(taskId); } catch { }
-        if (!editTask) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
+        let task;
+        try { task = await this.Task.findById(taskId); } catch { }
+        if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
         // validation task body
         let { name, priority, images_urls, description } = req.body;
         if (!taskPriorityEnum.includes(priority))
@@ -47,15 +47,33 @@ module.exports = new (class extends Controller {
         if (images_urls) images_urls.map(e => e.toString());
         if (description) description = description.toString(); else description = "";
         // set changes task on database
-        editTask.set({
+        task.set({
             name: name,
             priority: priority,
             images_urls: images_urls,
             description: description
         });
-        await editTask.save();
+        await task.save();
         // send response
-        this.response({ res, message: "change task detail", sCode: 200, data: editTask });
+        this.response({ res, message: "change task detail", sCode: 200, data: task });
+    }
+
+    async removeTask(req, res) {
+        // get task id of query >> ?select-task=
+        const taskId = req.query["select-task"];
+        let task;
+        try {
+            // delete task of database
+            task = await this.Task.findByIdAndRemove(taskId);
+            // delete task of "user.tasks" on database
+            let userOldTasks = [...req.user.tasks];
+            let userNewTasks = [];
+            userOldTasks.forEach(t => { if (t._id != taskId) userNewTasks.push(t) });
+            req.user.tasks = userNewTasks;
+        } catch { }
+        if (!task) return this.response({ res, sCode: 404, message: 'cannot find task id in query(select-task=)' });
+        req.user.save();
+        this.response({ res, sCode: 200, message: "task is deleted", data: task });
     }
 
 })();
