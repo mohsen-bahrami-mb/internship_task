@@ -9,5 +9,10 @@ router.post("/users",
     controller.validate,
     controller.createUser
 );
+router.put("/users/:email",
+    validator.editUserValidator(),
+    controller.validate,
+    controller.editUser
+);
 
 module.exports = router;

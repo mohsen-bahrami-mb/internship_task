@@ -6,6 +6,7 @@ const config = require('config');
 const User = require('../models/user');
 
 async function isLogin(req, res, next) {
+    // A middleware for login check with "json web token"
     // get token of header
     const token = req.header("auth_token");
     if (!token) return res.status(401).json({ message: "access denied", data: {} });
@@ -22,6 +23,7 @@ async function isLogin(req, res, next) {
 }
 
 async function isAdmin(req, res, next) {
+    // A middleware for check admin user. if it has admin access, can use next middlewares.
     const isAdmin = await req.user.is_admin;
     if (!isAdmin) return res.status(403).json({ message: "access denied - no admin", data: {} });
     next();
