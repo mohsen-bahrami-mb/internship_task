@@ -47,14 +47,21 @@ module.exports = new (class extends Controller {
         const salt = await bcrypt.genSalt(10);
         new_password = await bcrypt.hash(new_password, salt);
         // check tasks id is currect. then add to new tasks.
-        let oldTasksUser = [...editUser.tasks];
+        let failedSendTask = [];
         let newTasksUser = [];
-        await Promise.all(new_tasks.forEach(async (t) => {
-            if (oldTasksUser.indexOf(t)) return newTasksUser.push(t);
-            const isExistTask = await this.Task.findById(t);
-            if (isExistTask) return newTasksUser.push(t);
-            this.response({ res, sCode: 404, message: `cannot find task id: ${t}` });
+        let oldTasksUser = [...editUser.tasks];
+        await Promise.all(await new_tasks.map(async (tId) => {
+            const isOldTask = oldTasksUser.find(t => t._id == tId);
+            if (isOldTask) return newTasksUser.push(tId);
+            try { 
+                const isExistTask = await this.Task.findById(tId);
+                if (isExistTask) return newTasksUser.push(tId);
+            } catch {
+                failedSendTask.push(`cannot find task id: ${tId}`);
+            }
         }));
+        if (failedSendTask.length)
+            return this.response({ res, sCode: 404, message: "cannot find tasks", data: failedSendTask });
         // set changes user on database
         editUser.set({
             email: new_email,

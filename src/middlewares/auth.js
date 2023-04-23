@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const config = require('config');
 // require models
 const User = require('../models/user');
+// require middlewares
+const setLoginExpireAt = require('./setLoginExpireAt');
 
 async function isLogin(req, res, next) {
     // A middleware for login check with "json web token"
@@ -17,6 +19,10 @@ async function isLogin(req, res, next) {
     // find user
     const user = await User.findById(decoded.user_id);
     if (!user) return res.status(404).json({ message: "access denied - invalid token - not fond user", data: {} });
+    // check expire time for login
+    const nowTime = new Date();
+    if (user.login_expireAt < nowTime) return res.status(401).json({ message: "expire time. login again", data: {} });;
+    setLoginExpireAt(user);
     // set user in requset
     req.user = user;
     next();
