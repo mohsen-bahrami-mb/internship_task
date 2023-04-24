@@ -64,18 +64,16 @@ module.exports = new (class extends Controller {
     }
 
     async createTask(req, res) {
-        let { name, priority, images_urls, description } = req.body;
+        let { name, priority, description } = req.body;
         // validation task body
         if (!taskPriorityEnum.includes(priority))
             return this.response({ res, sCode: 400, message: "priority should be one of (high, medium, low)" });
-        if (images_urls) images_urls.map(e => e.toString());
         if (description) description = description.toString(); else description = "";
         // create task
         const task = await new this.Task({
             name,
             creator: req.user._id,
             priority,
-            images_urls,
             description
         });
         task.save();
@@ -95,16 +93,14 @@ module.exports = new (class extends Controller {
         const isUserTask = req.user.tasks.find(t => t._id == taskId);
         if (!isUserTask) return this.response({ res, sCode: 401, message: "access denied - your not partner in this task" });
         // validation task body
-        let { name, priority, images_urls, description } = req.body;
+        let { name, priority, description } = req.body;
         if (!taskPriorityEnum.includes(priority))
             return this.response({ res, sCode: 400, message: "priority should be one of (high, medium, low)" });
-        if (images_urls) images_urls.map(e => e.toString());
         if (description) description = description.toString(); else description = "";
         // set changes task on database
         task.set({
             name: name,
             priority: priority,
-            images_urls: images_urls,
             description: description
         });
         await task.save();
