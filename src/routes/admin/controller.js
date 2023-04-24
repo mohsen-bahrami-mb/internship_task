@@ -1,8 +1,42 @@
 // require modules
 const Controller = require('../controller');
 const bcrypt = require('bcrypt');
+const winston = require('winston');
+const fs = require('fs');
 
 module.exports = new (class extends Controller {
+
+    async checkUserToUpload(req, res, next) {
+        // find user email on database
+        const email = req.params.email;
+        const targetUser = await this.User.findOne({ email });
+        if (!targetUser) return this.response({ res, sCode: 404, message: "not found user email in parameter" });
+        req.targetUser = targetUser;
+        next();
+    }
+
+    async setPhoto(req, res) {
+        // check send photo
+        if (!req.file) return this.response({ res, message: "No files were uploaded", sCode: 400 });
+        // set & save photo. first remove file.then set url without domin(ip)
+        if (req.targetUser.image_url.includes("public/profiles_photos/"))
+            fs.unlink(req.targetUser.image_url, (err) => { if (err) winston.error(err.message, err) });
+        req.targetUser.image_url = "public/profiles_photos/" + req.file.filename;
+        req.targetUser.save();
+        this.response({
+            res, message: "uploded file, successfully", sCode: 200,
+            data: { filename: req.file.filename }
+        });
+    }
+
+    async deletePhoto(req, res) {
+        // first remove file.then clear url without domin(ip)
+        if (req.targetUser.image_url.includes("public/profiles_photos/"))
+        fs.unlink(req.targetUser.image_url, (err) => { if (err) winston.error(err.message, err) });
+        req.targetUser.image_url = "";
+        req.targetUser.save();
+        this.response({ res, message: "delete file, successfully", sCode: 200, });
+    }
 
     async getUaers(req, res) {
         const users = await this.User.find();
@@ -38,7 +72,7 @@ module.exports = new (class extends Controller {
         const editUser = await this.User.findOne({ email });
         if (!editUser) return this.response({ res, sCode: 404, message: "not found user email in parameter" });
         // get detail of body
-        let { new_email, new_name, new_password, new_is_admin, new_image_url, new_tasks } = req.body;
+        let { new_email, new_name, new_password, new_is_admin, new_tasks } = req.body;
         // check, "new_email" has existed on database
         const existedUser = await this.User.findOne({ email: new_email });
         if (existedUser && email != existedUser.email)
@@ -81,6 +115,9 @@ module.exports = new (class extends Controller {
         const email = req.params.email;
         const removeUser = await this.User.findOneAndRemove({ email });
         if (!removeUser) return this.response({ res, sCode: 404, message: `cannot find this user (${email})` });
+        // set & save photo. first remove file.then set url without domin(ip)
+        if (removeUser.image_url.includes("public/profiles_photos/"))
+            fs.unlink(removeUser.image_url, (err) => { if (err) winston.error(err.message, err) });
         this.response({
             res, sCode: 200, message: "user is deleted", data: { email: removeUser.email, name: removeUser.name }
         });

@@ -13,10 +13,11 @@ const { isLogin, isAdmin } = require('../middlewares/auth');
 //  >> /api/auth/login
 router.use("/api/auth", loginRouter);
 //  >> /api/admin/users
+//  >> /api/admin/users/:email
+//  >> /api/admin/users/upload-profile-photo/:email
 router.use("/api/admin", isLogin, isAdmin, adminRouter);
 //  >> /api/user
 //  >> /api/user/task?select-task=taskID
-//  >> /api/user/add-task-partners?select-task=taskID
 router.use("/api/user", isLogin, userRouter);
 //  >> /not-found
 // router.use("/not-found", notFoundRouter);

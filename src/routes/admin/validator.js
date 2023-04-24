@@ -24,7 +24,6 @@ module.exports = new class {
                 .isString().withMessage("new_password is not a string"),
             check("new_is_admin").notEmpty().withMessage("'new_is_admin' part cannot be empty")
                 .isBoolean().withMessage("'new_is_admin' part is not a boolean"),
-            check("new_image_url").isString().withMessage("'new_image_url' part is not a string"),
             check("new_tasks").isArray().withMessage("'new_tasks' part is not an array")
         ];
     }
